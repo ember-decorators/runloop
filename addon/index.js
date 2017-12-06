@@ -4,10 +4,10 @@ import { run } from '@ember/runloop';
 function decoratorWithReturnValue(fn) {
   return decorator(function(target, key, desc/*, params*/) {
     // set as value on descriptor - a function that when called will 
-    // return instead a run.next(myFunc)
-    return function()  {
+    // return run.next(myFunc)
+    return function(...args)  {
       const { value } = desc;
-      return fn(value);
+      return fn(value, ...args);
     }
   });
 }

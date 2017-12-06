@@ -20,3 +20,21 @@ test('"run.next" works with es6 class', function(assert) {
     done();
   }, 20);
 });
+
+test('"run.next" works with arguments', function(assert) {
+  let done = assert.async();
+  assert.expect(1);
+
+  class Foo {
+    @next
+    nextMe(arg) {
+      assert.equal(arg, 'wat')
+    }
+  }
+
+  let obj = new Foo();
+  setTimeout(() => {
+    obj.nextMe('wat');
+    done();
+  }, 20);
+});
