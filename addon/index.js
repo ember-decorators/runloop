@@ -7,7 +7,7 @@ function decoratorWithReturnValue(fn) {
     // return run.next(myFunc)
     return function(...args)  {
       const { value } = desc;
-      return fn(value, ...args);
+      return fn(this, value, ...args);
     }
   });
 }
