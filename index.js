@@ -2,5 +2,5 @@
 'use strict';
 
 module.exports = {
-  name: 'runloop'
+  name: '@ember-decorators/runloop'
 };
