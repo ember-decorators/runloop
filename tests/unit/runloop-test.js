@@ -1,4 +1,4 @@
-import { next } from '@ember-decorators/runloop';
+import { next, bind } from '@ember-decorators/runloop';
 import { module, test } from 'qunit';
 
 module('computed properties');
@@ -37,4 +37,28 @@ test('"run.next" works with arguments', function(assert) {
     obj.nextMe('wat');
     done();
   }, 20);
+});
+
+test('"run.bind" works with es6 class', function(assert) {
+  assert.expect(1);
+
+  class Foo {
+    constructor() {
+      this.prop = 'foo';
+    }
+
+    @bind nextMe = () => {
+      return this.prop;
+    };
+  }
+
+  class Bar extends Foo {
+    constructor() {
+      super();
+      this.prop = 'bar';
+    }
+  }
+
+  let obj = new Bar();
+  assert.equal(obj.nextMe(), 'foo');
 });
