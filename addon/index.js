@@ -1,5 +1,7 @@
-import { decorator } from '@ember-decorators/utils/decorator-wrappers';
+import { decorator, decoratorWithParams } from '@ember-decorators/utils/decorator-wrappers';
 import { run } from '@ember/runloop';
+import { assert } from '@ember/debug';
+
 
 function decoratorWithReturnValue(fn) {
   return decorator(function(target, key, desc/*, params*/) {
@@ -29,3 +31,35 @@ function decoratorWithReturnValue(fn) {
  * @function
  */
 export const next = decoratorWithReturnValue(run.next);
+
+
+function decoratorWithTimer(fn) {
+  return decoratorWithParams(function(target, key, desc, params) {
+    assert(`The @debounce decorator must take one (timer) or two (timer && immediate flag) parameter. Received: ${params.length}`, params.length === 1 || params.length === 2);
+
+    return function(...args)  {
+      const { value } = desc;
+      const [ param, immediate = false ] = params;
+      return fn(this, value, ...args, param, immediate);
+    }
+  });
+}
+
+/**
+ * Decorator that makes the target function runloop aware and debounce for specified
+ * timeout
+ *
+ * ```js
+ * import Component from '@ember/component';
+ * import { debounce } from 'ember-decorators/runloop';
+ *
+ * export default class ActionDemoComponent extends Component {
+ *   @debounce(50)
+ *   foo() {
+ *     // do something
+ *   }
+ * }
+ * ```
+ * @function
+ */
+export const debounce = decoratorWithTimer(run.debounce);

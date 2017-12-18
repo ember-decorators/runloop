@@ -1,5 +1,54 @@
 # runloop
 
+## Usage
+
+### Installation
+
+`ember install ember-decorators/runloop`
+
+### debounce
+
+In your application where you use ES6 classes:
+
+```javascript
+import Component from '@ember/component';
+import { debounce } from "@ember/runloop";
+import { action } from "@ember-decorators/object";
+
+export default class TypeAhead extends Component {
+  fetchResults(searchValue) {
+    ...
+  },
+
+  @action
+  handleTyping() {
+    debounce(this, get(this, 'fetchResults'), get(this, 'searchValue'), 250);
+  }
+}
+
+```
+
+You replace it with this:
+
+```javascript
+import Component from '@ember/component';
+import { debounce } from "@ember-decorators/runloop";
+import { action } from "@ember-decorators/object";
+
+export default class TypeAhead extends Component {
+  @debounce(250)
+  fetchResults(searchValue) {
+    ...
+  },
+
+  @action
+  handleTyping() {
+    get(this, 'fetchResults')(get('searchValue'));
+  }
+}
+
+```
+
 This README outlines the details of collaborating on this Ember addon.
 
 ## Installation
