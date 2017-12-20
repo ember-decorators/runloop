@@ -92,6 +92,45 @@ export default class TypeAhead extends Component {
 
 ```
 
+### schedule
+
+In your application where you use ES6 classes:
+
+```javascript
+import Component from '@ember/component';
+import { schedule } from "@ember/runloop";
+
+export default class TypeAhead extends Component {
+  fetchResults(searchValue) {
+    ...
+  },
+
+  didInsertElement() {
+    schedule('afterRender', this, get(this, 'fetchResults'), get(this, 'searchValue'));
+  }
+}
+
+```
+
+You replace it with this:
+
+```javascript
+import Component from '@ember/component';
+import { schedule } from "@ember-decorators/runloop";
+
+export default class TypeAhead extends Component {
+  @schedule('afterRender')
+  fetchResults(searchValue) {
+    ...
+  },
+
+  didInsertElement() {
+    get(this, 'fetchResults')(get('searchValue'));
+  }
+}
+
+```
+
 This README outlines the details of collaborating on this Ember addon.
 
 ## Installation
