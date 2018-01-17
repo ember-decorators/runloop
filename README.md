@@ -4,7 +4,7 @@
 
 ### Installation
 
-`ember install ember-decorators/runloop`
+`ember install @ember-decorators/runloop`
 
 ### debounce
 
@@ -43,6 +43,88 @@ export default class TypeAhead extends Component {
 
   @action
   handleTyping() {
+    get(this, 'fetchResults')(get('searchValue'));
+  }
+}
+
+```
+
+### throttle
+
+In your application where you use ES6 classes:
+
+```javascript
+import Component from '@ember/component';
+import { throttle } from "@ember/runloop";
+import { action } from "@ember-decorators/object";
+
+export default class TypeAhead extends Component {
+  fetchResults(searchValue) {
+    ...
+  },
+
+  @action
+  moveMouse() {
+    throttle(this, get(this, 'fetchResults'), get(this, 'searchValue'), 250);
+  }
+}
+
+```
+
+You replace it with this:
+
+```javascript
+import Component from '@ember/component';
+import { throttle } from "@ember-decorators/runloop";
+import { action } from "@ember-decorators/object";
+
+export default class TypeAhead extends Component {
+  @throttle(250)
+  fetchResults(searchValue) {
+    ...
+  },
+
+  @action
+  moveMouse() {
+    get(this, 'fetchResults')(get('searchValue'));
+  }
+}
+
+```
+
+### schedule
+
+In your application where you use ES6 classes:
+
+```javascript
+import Component from '@ember/component';
+import { schedule } from "@ember/runloop";
+
+export default class TypeAhead extends Component {
+  fetchResults(searchValue) {
+    ...
+  },
+
+  didInsertElement() {
+    schedule('afterRender', this, get(this, 'fetchResults'), get(this, 'searchValue'));
+  }
+}
+
+```
+
+You replace it with this:
+
+```javascript
+import Component from '@ember/component';
+import { schedule } from "@ember-decorators/runloop";
+
+export default class TypeAhead extends Component {
+  @schedule('afterRender')
+  fetchResults(searchValue) {
+    ...
+  },
+
+  didInsertElement() {
     get(this, 'fetchResults')(get('searchValue'));
   }
 }
